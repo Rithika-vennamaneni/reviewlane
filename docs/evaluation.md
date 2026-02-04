@@ -28,6 +28,7 @@ One of:
 - policy_unclear
 - potential_harm
 - needs_escalation
+- policy_conflict
 
 ### 3) Reviewer confidence (required)
 Choose one:
