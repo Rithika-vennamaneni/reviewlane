@@ -17,6 +17,22 @@ This project is motivated by the observation that as human oversight becomes a s
 
 ## Insight
 
+As AI systems become more capable, human oversight becomes rarer but more high impact. In this setting, the human reviewer is part of the safety system, not just a last step approval button.
+
+A key observation is that “human review” is often treated as a binary outcome (approved vs rejected), even though real oversight contains uncertainty and legitimate disagreement. Disagreement can reflect policy gray areas, missing context, or differences in risk tolerance and therefore provides useful signals about where the system (and policy) needs clarification.
+
+This project treats human judgment as measurable system data (decision, reason tags, confidence) in order to make oversight more legible, auditable, and improvable over time, aligning with scalable supervision approaches that aim to concentrate human effort where it matters most.
+
+## Early Results (Prototype)
+
+To validate the premise, I simulated a small double review process on 3 items (2 reviewers per item) and measured agreement.
+
+- Decision agreement rate: 33% (1/3)
+- Disagreement drivers included: `missing_citation`, `policy_unclear`, and `ungrounded_claim`
+- Disagreements occurred even when reviewers had similar confidence (e.g., medium/medium), suggesting that ambiguity and interpretation, not just reviewer certainty contributes to inconsistent outcomes.
+
+This supports the need for tooling that surfaces disagreement patterns and treats them as governance signals rather than silently collapsing human oversight into a single binary outcome.
+
 ## System Overview
 
 ## What This Enables

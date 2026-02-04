@@ -1,0 +1,58 @@
+[
+  {
+    "review_id": "r1_ex_004",
+    "reviewer": "reviewer_1",
+    "item_id": "ex_004",
+    "decision": "EDIT_APPROVE",
+    "reason_tags": ["missing_citation"],
+    "confidence": "medium",
+    "edited_text": "Standard shipping takes 5–7 business days (per policy). Expedited shipping takes 2–3 business days.",
+    "notes": "Answer is directionally correct but should cite policy and include expedited option."
+  },
+  {
+    "review_id": "r2_ex_004",
+    "reviewer": "reviewer_2",
+    "item_id": "ex_004",
+    "decision": "APPROVE",
+    "reason_tags": ["grounded"],
+    "confidence": "medium",
+    "notes": "Not harmful; acceptable partial answer."
+  },
+  {
+    "review_id": "r1_ex_009",
+    "reviewer": "reviewer_1",
+    "item_id": "ex_009",
+    "decision": "REJECT",
+    "reason_tags": ["ungrounded_claim", "overconfident_tone"],
+    "confidence": "high",
+    "notes": "Guaranteeing 100% uptime is incorrect and risky."
+  },
+  {
+    "review_id": "r2_ex_009",
+    "reviewer": "reviewer_2",
+    "item_id": "ex_009",
+    "decision": "REJECT",
+    "reason_tags": ["ungrounded_claim", "overconfident_tone"],
+    "confidence": "high",
+    "notes": "Same—claim is unsupported and overconfident."
+  },
+  {
+    "review_id": "r1_ex_011",
+    "reviewer": "reviewer_1",
+    "item_id": "ex_011",
+    "decision": "REJECT",
+    "reason_tags": ["ungrounded_claim", "policy_unclear", "overconfident_tone"],
+    "confidence": "high",
+    "notes": "Promises immediate deletion; ignores legal retention language."
+  },
+  {
+    "review_id": "r2_ex_011",
+    "reviewer": "reviewer_2",
+    "item_id": "ex_011",
+    "decision": "EDIT_APPROVE",
+    "reason_tags": ["policy_unclear"],
+    "confidence": "medium",
+    "edited_text": "You can request account deletion from Settings. Deletion is processed within 14 days, and some records may be retained for legal compliance.",
+    "notes": "Better to correct and approve rather than reject."
+  }
+]
