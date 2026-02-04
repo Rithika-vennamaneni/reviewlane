@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { getSeedItems } from "@/lib/seed";
 
 export default function Home() {
@@ -25,17 +27,38 @@ export default function Home() {
               padding: 14,
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
               <div style={{ fontWeight: 700 }}>{it.id}</div>
-              <div
-                style={{
-                  padding: "2px 10px",
-                  borderRadius: 999,
-                  border: "1px solid #ddd",
-                  fontSize: 12,
-                }}
-              >
-                expected risk: {it.expected_risk}
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <div
+                  style={{
+                    padding: "2px 10px",
+                    borderRadius: 999,
+                    border: "1px solid #ddd",
+                    fontSize: 12,
+                  }}
+                >
+                  expected risk: {it.expected_risk}
+                </div>
+                <Link
+                  href={`/review/${it.id}`}
+                  style={{
+                    fontSize: 12,
+                    border: "1px solid #111",
+                    borderRadius: 999,
+                    padding: "2px 10px",
+                    textDecoration: "none",
+                    color: "#111",
+                  }}
+                >
+                  Review
+                </Link>
               </div>
             </div>
 

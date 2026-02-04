@@ -1,0 +1,11 @@
+// app/web/app/review/[id]/page.tsx
+import ItemDetailClient from "./ItemDetailClient";
+
+export default async function ReviewItemPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  return <ItemDetailClient id={id} />;
+}
