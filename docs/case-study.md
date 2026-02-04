@@ -1,7 +1,5 @@
 # Case Study: Measuring Human Review Quality in LLM Safety Pipelines
 
-## Context
-
 ## Background & Motivation
 
 Recent work on scalable AI oversight argues that supervision should rely on a combination of automated methods and a small amount of focused, high-quality human judgment. Rather than collecting large volumes of human feedback, this approach emphasizes making human oversight more legible, intentional, and effective as AI systems become more capable.
@@ -14,6 +12,12 @@ This project is motivated by the observation that as human oversight becomes a s
 
 
 ## Problem Statement
+
+Modern LLM deployments increasingly rely on human-in-the-loop review to manage safety, correctness, and compliance in sensitive or ambiguous cases. As models become more capable, this human oversight becomes less frequent but more consequential, concentrating responsibility on a smaller set of high-impact decisions.
+
+In practice, human review is often treated as a binary outcome approved or rejected without systematic visibility into how decisions are made, where reviewers disagree, or how interpretations of policy change over time. Disagreement, uncertainty, and judgment calls are typically collapsed into a single final action, leaving little trace for auditing, learning, or governance.
+
+This creates a blind spot in AI safety pipelines: while model behavior and automated evaluations are increasingly instrumented and measured, the quality and consistency of human oversight itself remains largely opaque. Without tooling to make human judgment legible and measurable at the system level, organizations risk silently accumulating policy ambiguity, inconsistent enforcement, and governance gaps as AI deployments scale.
 
 ## Insight
 
@@ -32,12 +36,6 @@ To validate the premise, I simulated a small double review process on 3 items (2
 - Disagreements occurred even when reviewers had similar confidence (e.g., medium/medium), suggesting that ambiguity and interpretation, not just reviewer certainty contributes to inconsistent outcomes.
 
 This supports the need for tooling that surfaces disagreement patterns and treats them as governance signals rather than silently collapsing human oversight into a single binary outcome.
-
-## System Overview
-
-## What This Enables
-
-## What This Does NOT Attempt to Do
 
 ## References
 - Anthropic. Scalable Oversight and Constitutional AI. 2022. https://arxiv.org/pdf/2212.08073
