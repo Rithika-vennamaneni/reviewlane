@@ -1,7 +1,7 @@
 # Evaluation Framework (v0)
 
 ## Goal
-Support human judgment (not replace it) by making review decisions measurable:
+These signals are intended to help concentrate human oversight on high-impact, ambiguous cases, aligning with scalable supervision approaches that prioritize small amounts of focused, high-quality human judgment(not replace it).
 - agreement / disagreement
 - confidence
 - drift over time
@@ -41,6 +41,7 @@ Short explanation (1–2 sentences max)
 
 
 ## System Metrics (computed later)
+Metrics are analyzed at the system level to surface ambiguity, training needs, and policy gray areas, not to evaluate individual reviewer performance.
 
 ### A) Agreement
 - decision_agreement_rate = % of double-reviewed items with the same decision
