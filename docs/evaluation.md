@@ -14,6 +14,7 @@ These signals are intended to help concentrate human oversight on high-impact, a
 ## Purpose
 
 The evaluation framework is designed to selectively involve humans in sensitive or ambiguous cases, making human judgment a visible and accountable part of the AI system rather than an opaque fallback.
+Ambiguous cases are intentionally included in the evaluation dataset, as disagreement among reviewers is treated as a signal of policy uncertainty rather than reviewer error.
 
 ## Review Form (what a reviewer must submit)
 
@@ -23,7 +24,7 @@ One of:
 - EDIT_APPROVE
 - REJECT
 
-### 2) Reason tags (required, pick 1–3)
+### 2) Reason tags
 - grounded
 - missing_citation
 - ungrounded_claim
