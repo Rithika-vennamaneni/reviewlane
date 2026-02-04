@@ -11,6 +11,10 @@ These signals are intended to help concentrate human oversight on high-impact, a
 - Ranking or punishing reviewers
 - Automating final decisions
 
+## Purpose
+
+The evaluation framework is designed to selectively involve humans in sensitive or ambiguous cases, making human judgment a visible and accountable part of the AI system rather than an opaque fallback.
+
 ## Review Form (what a reviewer must submit)
 
 ### 1) Decision (required)
