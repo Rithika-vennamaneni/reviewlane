@@ -1,13 +1,54 @@
-# Evaluation Framework
+# Evaluation Framework (v0)
 
-This document defines how human review quality is measured in the system.
-
-## Goals
-- Support human judgment, not replace it
-- Surface ambiguity, disagreement and drift
-- Improve safety and governance of LLM deployments
+## Goal
+Support human judgment (not replace it) by making review decisions measurable:
+- agreement / disagreement
+- confidence
+- drift over time
+- common failure reasons
 
 ## Non-goals
-- Ranking or penalizing reviewers
+- Ranking or punishing reviewers
 - Automating final decisions
 
+## Review Form (what a reviewer must submit)
+
+### 1) Decision (required)
+One of:
+- APPROVE
+- EDIT_APPROVE
+- REJECT
+
+### 2) Reason tags (required, pick 1–3)
+- grounded
+- missing_citation
+- ungrounded_claim
+- overconfident_tone
+- ambiguous_question
+- policy_unclear
+- potential_harm
+- needs_escalation
+
+### 3) Reviewer confidence (required)
+Choose one:
+- low
+- medium
+- high
+
+### 4) Notes (optional)
+Short explanation (1–2 sentences max)
+
+
+## System Metrics (computed later)
+
+### A) Agreement
+- decision_agreement_rate = % of double-reviewed items with the same decision
+
+### B) Disagreement drivers
+- disagreement_by_tag = which tags most correlate with disagreement
+
+### C) Calibration
+- do low-confidence reviews correlate with disagreements?
+
+### D) Drift
+- does the distribution of decisions/tags change week to week?
