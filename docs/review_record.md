@@ -7,6 +7,12 @@ This document defines the structure of a single human review submission.
 - item_id: string  
   The seed item or request being reviewed.
 
+- batch_id: string  
+  The batch this item belongs to (for drift comparisons).
+
+- reviewer_id: string  
+  Identifier for the human reviewer submitting the record.
+
 - decision: enum  
   One of:
   - APPROVE
@@ -30,6 +36,9 @@ This document defines the structure of a single human review submission.
   - low
   - medium
   - high
+
+- created_at: timestamp  
+  ISO timestamp of when the review was recorded.
 
 ## Optional fields
 

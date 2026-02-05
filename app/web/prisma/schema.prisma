@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Decision {
+  APPROVE
+  EDIT_APPROVE
+  REJECT
+}
+
+enum Confidence {
+  low
+  medium
+  high
+}
+
+model Item {
+  id                  String
+  batch_id            String
+  question            String
+  context             String
+  model_answer        String
+  expected_risk       String
+  expected_issue_tags Json
+  created_at          DateTime @default(now())
+
+  reviews Review[]
+
+  @@unique([id, batch_id])
+  @@index([batch_id])
+}
+
+model Review {
+  id           String     @id @default(cuid())
+  item_id      String
+  batch_id     String
+  reviewer_id  String
+  decision     Decision
+  confidence   Confidence
+  reason_tags  Json
+  edited_text  String?
+  notes        String?
+  created_at   DateTime   @default(now())
+
+  item Item @relation(fields: [item_id, batch_id], references: [id, batch_id], onDelete: Cascade)
+
+  @@unique([item_id, batch_id, reviewer_id])
+  @@index([batch_id])
+  @@index([item_id])
+}
