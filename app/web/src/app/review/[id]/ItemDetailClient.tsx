@@ -1,80 +1,109 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 
-import { getSeedItems } from "@/lib/seed";
+import BatchSelector from "@/app/components/BatchSelector";
+import ReviewerSelector from "@/app/components/ReviewerSelector";
+import type { Confidence, Decision, ItemRecord, ReviewRecord } from "@/lib/types";
+import { REASON_TAGS } from "@/lib/types";
 
-type Decision = "APPROVE" | "EDIT_APPROVE" | "REJECT";
-type Confidence = "low" | "medium" | "high";
-
-type ReviewRecord = {
-  item_id: string;
-  decision: Decision;
-  reason_tags: string[];
-  confidence: Confidence;
-  edited_text?: string;
-  notes?: string;
-  created_at: string;
-};
-
-const TAGS = [
-  "grounded",
-  "missing_citation",
-  "ungrounded_claim",
-  "overconfident_tone",
-  "ambiguous_question",
-  "policy_unclear",
-  "policy_conflict",
-  "potential_harm",
-  "needs_escalation",
-];
-
-const STORAGE_KEY = "reviewlane:reviews";
-
-function loadAllReviews(): Record<string, ReviewRecord> {
-  if (typeof window === "undefined") return {};
-  const raw = window.localStorage.getItem(STORAGE_KEY);
-  if (!raw) return {};
-  try {
-    const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === "object") {
-      return parsed as Record<string, ReviewRecord>;
-    }
-  } catch {
-    // Ignore malformed storage.
-  }
-  return {};
-}
-
-function saveAllReviews(next: Record<string, ReviewRecord>) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-}
-
-export default function ItemDetailClient({ id }: { id: string }) {
-  const item = useMemo(() => getSeedItems().find((it) => it.id === id), [id]);
+export default function ItemDetailClient({
+  id,
+  batchId,
+}: {
+  id: string;
+  batchId: string;
+}) {
+  const [item, setItem] = useState<ItemRecord | null>(null);
+  const [itemStatus, setItemStatus] = useState<
+    "loading" | "ready" | "error"
+  >("loading");
+  const [itemError, setItemError] = useState("");
 
   const [decision, setDecision] = useState<Decision | "">("");
   const [confidence, setConfidence] = useState<Confidence | "">("");
   const [reasonTags, setReasonTags] = useState<string[]>([]);
   const [editedText, setEditedText] = useState("");
   const [notes, setNotes] = useState("");
-  const [status, setStatus] = useState<"idle" | "saved" | "error">("idle");
-  const [loaded, setLoaded] = useState(false);
+  const [status, setStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+  const [statusMessage, setStatusMessage] = useState("");
+  const [reviewerId, setReviewerId] = useState("");
+  const [batchOverride, setBatchOverride] = useState(batchId);
 
   useEffect(() => {
-    const all = loadAllReviews();
-    const existing = all[id];
-    if (existing) {
-      setDecision(existing.decision);
-      setConfidence(existing.confidence);
-      setReasonTags(existing.reason_tags);
-      setEditedText(existing.edited_text ?? "");
-      setNotes(existing.notes ?? "");
-    }
-    setLoaded(true);
-  }, [id]);
+    setBatchOverride(batchId);
+  }, [batchId]);
+
+  useEffect(() => {
+    if (!batchOverride) return;
+    let active = true;
+    setItemStatus("loading");
+    fetch(`/api/items?batch_id=${batchOverride}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to load item.");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!active) return;
+        const found = (data.items ?? []).find((it: ItemRecord) => it.id === id);
+        setItem(found ?? null);
+        setItemStatus(found ? "ready" : "error");
+        if (!found) setItemError("Item not found in this batch.");
+      })
+      .catch((err: Error) => {
+        if (!active) return;
+        setItemError(err.message);
+        setItemStatus("error");
+      });
+    return () => {
+      active = false;
+    };
+  }, [batchOverride, id]);
+
+  useEffect(() => {
+    if (!reviewerId || !batchOverride) return;
+    let active = true;
+    fetch(`/api/reviews?batch_id=${batchOverride}&item_id=${id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to load saved review.");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!active) return;
+        const reviews = (data.reviews ?? []) as ReviewRecord[];
+        const existing = reviews.find((review) => review.reviewer_id === reviewerId);
+        if (existing) {
+          setDecision(existing.decision);
+          setConfidence(existing.confidence);
+          setReasonTags(existing.reason_tags ?? []);
+          setEditedText(existing.edited_text ?? "");
+          setNotes(existing.notes ?? "");
+        } else {
+          setDecision("");
+          setConfidence("");
+          setReasonTags([]);
+          setEditedText("");
+          setNotes("");
+        }
+        setStatus("idle");
+        setStatusMessage("");
+      })
+      .catch((err: Error) => {
+        if (!active) return;
+        setStatus("error");
+        setStatusMessage(err.message);
+      });
+    return () => {
+      active = false;
+    };
+  }, [reviewerId, batchOverride, id]);
 
   function toggleTag(tag: string) {
     setReasonTags((prev) =>
@@ -82,58 +111,94 @@ export default function ItemDetailClient({ id }: { id: string }) {
     );
   }
 
-  function handleSave(event: FormEvent<HTMLFormElement>) {
+  async function handleSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setStatusMessage("");
     if (!decision || !confidence) {
       setStatus("error");
+      setStatusMessage("Select decision + confidence.");
       return;
     }
     if (decision === "EDIT_APPROVE" && editedText.trim().length === 0) {
       setStatus("error");
+      setStatusMessage("Provide edited answer for EDIT APPROVE.");
+      return;
+    }
+    if (!reviewerId) {
+      setStatus("error");
+      setStatusMessage("Set a reviewer id before saving.");
       return;
     }
 
-    const record: ReviewRecord = {
-      item_id: id,
-      decision,
-      reason_tags: reasonTags,
-      confidence,
-      edited_text: decision === "EDIT_APPROVE" ? editedText.trim() : undefined,
-      notes: notes.trim() || undefined,
-      created_at: new Date().toISOString(),
-    };
-
-    const all = loadAllReviews();
-    all[id] = record;
-    saveAllReviews(all);
-    setStatus("saved");
+    setStatus("saving");
+    try {
+      const response = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          item_id: id,
+          batch_id: batchOverride,
+          reviewer_id: reviewerId,
+          decision,
+          reason_tags: reasonTags,
+          confidence,
+          edited_text: decision === "EDIT_APPROVE" ? editedText.trim() : undefined,
+          notes: notes.trim() || undefined,
+        }),
+      });
+      if (!response.ok) {
+        const payload = await response.json();
+        throw new Error(payload?.error || "Failed to save review.");
+      }
+      setStatus("saved");
+    } catch (err) {
+      setStatus("error");
+      setStatusMessage(err instanceof Error ? err.message : "Failed to save.");
+    }
   }
 
   function handleClear() {
-    const all = loadAllReviews();
-    delete all[id];
-    saveAllReviews(all);
     setDecision("");
     setConfidence("");
     setReasonTags([]);
     setEditedText("");
     setNotes("");
     setStatus("idle");
+    setStatusMessage("");
   }
 
-  if (!item) {
+  if (itemStatus === "error") {
     return (
       <main style={{ padding: 24, fontFamily: "system-ui" }}>
         <Link href="/">← Back to queue</Link>
         <h1 style={{ marginTop: 16 }}>Item not found</h1>
-        <p>We couldn’t find a seed item with id "{id}".</p>
+        <p>{itemError || `We couldn’t find a seed item with id "${id}".`}</p>
       </main>
     );
   }
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui" }}>
-      <Link href="/">← Back to queue</Link>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+        }}
+      >
+        <Link href="/">← Back to queue</Link>
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <BatchSelector value={batchOverride} onChange={setBatchOverride} />
+          <ReviewerSelector onChange={setReviewerId} />
+          <Link href={`/metrics?batch_id=${batchOverride}`} style={{ fontSize: 12 }}>
+            Metrics
+          </Link>
+          <Link href="/compare" style={{ fontSize: 12 }}>
+            Compare
+          </Link>
+        </div>
+      </div>
 
       <div
         style={{
@@ -144,9 +209,9 @@ export default function ItemDetailClient({ id }: { id: string }) {
         }}
       >
         <div>
-          <h1 style={{ margin: 0, fontSize: 26 }}>Review {item.id}</h1>
+          <h1 style={{ margin: 0, fontSize: 26 }}>Review {item?.id ?? id}</h1>
           <div style={{ marginTop: 6, fontSize: 13, opacity: 0.7 }}>
-            Expected risk: {item.expected_risk}
+            Expected risk: {item?.expected_risk}
           </div>
         </div>
         <div
@@ -157,13 +222,19 @@ export default function ItemDetailClient({ id }: { id: string }) {
             fontSize: 12,
           }}
         >
-          {loaded ? "localStorage enabled" : "loading saved review"}
+          {itemStatus === "loading" ? "loading item" : `batch: ${batchOverride}`}
         </div>
       </div>
 
+      {itemStatus === "loading" && (
+        <div style={{ marginTop: 12, fontSize: 13, opacity: 0.7 }}>
+          Loading item…
+        </div>
+      )}
+
       <section style={{ marginTop: 20 }}>
         <div style={{ fontSize: 12, opacity: 0.7 }}>Question</div>
-        <div style={{ marginTop: 6, fontSize: 16 }}>{item.question}</div>
+        <div style={{ marginTop: 6, fontSize: 16 }}>{item?.question}</div>
       </section>
 
       <section style={{ marginTop: 16 }}>
@@ -177,7 +248,7 @@ export default function ItemDetailClient({ id }: { id: string }) {
             borderRadius: 10,
           }}
         >
-          {item.context}
+          {item?.context}
         </div>
       </section>
 
@@ -192,7 +263,7 @@ export default function ItemDetailClient({ id }: { id: string }) {
             borderRadius: 10,
           }}
         >
-          {item.model_answer}
+          {item?.model_answer}
         </div>
       </section>
 
@@ -264,7 +335,7 @@ export default function ItemDetailClient({ id }: { id: string }) {
               marginTop: 8,
             }}
           >
-            {TAGS.map((tag) => (
+            {REASON_TAGS.map((tag) => (
               <label
                 key={tag}
                 style={{
@@ -341,8 +412,9 @@ export default function ItemDetailClient({ id }: { id: string }) {
               borderRadius: 10,
               cursor: "pointer",
             }}
+            disabled={status === "saving"}
           >
-            Save review
+            {status === "saving" ? "Saving..." : "Save review"}
           </button>
           <button
             type="button"
@@ -359,12 +431,13 @@ export default function ItemDetailClient({ id }: { id: string }) {
           </button>
           {status === "saved" && (
             <div style={{ alignSelf: "center", fontSize: 13 }}>
-              Saved locally.
+              Saved to backend.
             </div>
           )}
           {status === "error" && (
             <div style={{ alignSelf: "center", fontSize: 13, color: "#c00" }}>
-              Please select decision + confidence. Add edited answer if needed.
+              {statusMessage ||
+                "Please select decision + confidence. Add edited answer if needed."}
             </div>
           )}
         </div>

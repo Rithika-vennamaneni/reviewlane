@@ -1,11 +1,13 @@
 // app/web/app/review/[id]/page.tsx
 import ItemDetailClient from "./ItemDetailClient";
 
-export default async function ReviewItemPage({
+export default function ReviewItemPage({
   params,
+  searchParams,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
+  searchParams?: { batch_id?: string };
 }) {
-  const { id } = await params;
-  return <ItemDetailClient id={id} />;
+  const batchId = searchParams?.batch_id ?? "batch_a";
+  return <ItemDetailClient id={params.id} batchId={batchId} />;
 }
