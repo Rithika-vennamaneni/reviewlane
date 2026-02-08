@@ -50,7 +50,15 @@ export default function MetricsPage() {
   }, [metrics]);
 
   return (
-    <main style={{ padding: 24, fontFamily: "system-ui" }}>
+    <main
+      style={{
+        padding: 24,
+        fontFamily: "system-ui",
+        background: "var(--background)",
+        color: "var(--foreground)",
+        minHeight: "100vh",
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -87,9 +95,10 @@ export default function MetricsPage() {
         <div style={{ marginTop: 20, display: "grid", gap: 16 }}>
           <section
             style={{
-              border: "1px solid #eee",
+              border: "1px solid var(--border)",
               borderRadius: 12,
               padding: 16,
+              background: "var(--surface)",
             }}
           >
             <h2 style={{ margin: 0, fontSize: 16 }}>Disagreement rate</h2>
@@ -102,9 +111,10 @@ export default function MetricsPage() {
 
           <section
             style={{
-              border: "1px solid #eee",
+              border: "1px solid var(--border)",
               borderRadius: 12,
               padding: 16,
+              background: "var(--surface)",
             }}
           >
             <h2 style={{ margin: 0, fontSize: 16 }}>Top issue tags</h2>
@@ -125,9 +135,10 @@ export default function MetricsPage() {
 
           <section
             style={{
-              border: "1px solid #eee",
+              border: "1px solid var(--border)",
               borderRadius: 12,
               padding: 16,
+              background: "var(--surface)",
             }}
           >
             <h2 style={{ margin: 0, fontSize: 16 }}>

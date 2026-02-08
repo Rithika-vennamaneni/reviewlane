@@ -65,7 +65,15 @@ export default function ComparePage() {
   }, [data]);
 
   return (
-    <main style={{ padding: 24, fontFamily: "system-ui" }}>
+    <main
+      style={{
+        padding: 24,
+        fontFamily: "system-ui",
+        background: "var(--background)",
+        color: "var(--foreground)",
+        minHeight: "100vh",
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -132,9 +140,10 @@ export default function ComparePage() {
         <div style={{ marginTop: 20, display: "grid", gap: 16 }}>
           <section
             style={{
-              border: "1px solid #eee",
+              border: "1px solid var(--border)",
               borderRadius: 12,
               padding: 16,
+              background: "var(--surface)",
             }}
           >
             <h2 style={{ margin: 0, fontSize: 16 }}>
@@ -158,9 +167,10 @@ export default function ComparePage() {
 
           <section
             style={{
-              border: "1px solid #eee",
+              border: "1px solid var(--border)",
               borderRadius: 12,
               padding: 16,
+              background: "var(--surface)",
             }}
           >
             <h2 style={{ margin: 0, fontSize: 16 }}>Drift by tag</h2>

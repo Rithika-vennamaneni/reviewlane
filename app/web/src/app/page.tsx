@@ -40,7 +40,15 @@ export default function Home() {
   }, [batchId]);
 
   return (
-    <main style={{ padding: 24, fontFamily: "system-ui" }}>
+    <main
+      style={{
+        padding: 24,
+        fontFamily: "system-ui",
+        background: "var(--background)",
+        color: "var(--foreground)",
+        minHeight: "100vh",
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -90,9 +98,10 @@ export default function Home() {
           <div
             key={`${it.id}-${it.batch_id}`}
             style={{
-              border: "1px solid #e5e5e5",
+              border: "1px solid var(--border)",
               borderRadius: 12,
               padding: 14,
+              background: "var(--background)",
             }}
           >
             <div
@@ -108,7 +117,7 @@ export default function Home() {
                   style={{
                     padding: "2px 10px",
                     borderRadius: 999,
-                    border: "1px solid #ddd",
+                    border: "1px solid var(--border)",
                     fontSize: 12,
                   }}
                 >
@@ -118,12 +127,12 @@ export default function Home() {
                   href={`/review/${it.id}?batch_id=${batchId}`}
                   style={{
                     fontSize: 12,
-                    border: "1px solid #111",
+                    border: "1px solid var(--accent)",
                     borderRadius: 999,
                     padding: "2px 10px",
                     textDecoration: "none",
-                    color: "#fff",
-                    background: "#111",
+                    color: "var(--accent-foreground)",
+                    background: "var(--accent)",
                   }}
                 >
                   Review
@@ -149,9 +158,10 @@ export default function Home() {
                     key={t}
                     style={{
                       fontSize: 12,
-                      border: "1px solid #ddd",
+                      border: "1px solid var(--border)",
                       borderRadius: 999,
                       padding: "2px 10px",
+                      background: "var(--surface)",
                     }}
                   >
                     {t}

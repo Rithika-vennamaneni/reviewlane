@@ -182,8 +182,8 @@ export default function ItemDetailClient({
       style={{
         padding: 24,
         fontFamily: "system-ui",
-        background: "#fff",
-        color: "#111",
+        background: "var(--background)",
+        color: "var(--foreground)",
         minHeight: "100vh",
       }}
     >
@@ -224,7 +224,7 @@ export default function ItemDetailClient({
         </div>
         <div
           style={{
-            border: "1px solid #ddd",
+            border: "1px solid var(--border)",
             borderRadius: 999,
             padding: "4px 12px",
             fontSize: 12,
@@ -250,11 +250,11 @@ export default function ItemDetailClient({
         <div
           style={{
             marginTop: 6,
-            background: "#f5f5f5",
-            border: "1px solid #eee",
+            background: "var(--surface)",
+            border: "1px solid var(--border)",
             padding: 12,
             borderRadius: 10,
-            color: "#111",
+            color: "var(--foreground)",
           }}
         >
           {item?.context}
@@ -266,11 +266,11 @@ export default function ItemDetailClient({
         <div
           style={{
             marginTop: 6,
-            background: "#f0f2ff",
-            border: "1px solid #d6daf5",
+            background: "var(--surface-muted)",
+            border: "1px solid var(--border)",
             padding: 12,
             borderRadius: 10,
-            color: "#111",
+            color: "var(--foreground)",
           }}
         >
           {item?.model_answer}
@@ -295,7 +295,7 @@ export default function ItemDetailClient({
                 <label
                   key={opt}
                   style={{
-                    border: "1px solid #ddd",
+                    border: "1px solid var(--border)",
                     borderRadius: 999,
                     padding: "6px 12px",
                     cursor: "pointer",
@@ -328,7 +328,7 @@ export default function ItemDetailClient({
                 marginTop: 6,
                 padding: 10,
                 borderRadius: 10,
-                border: "1px solid #ddd",
+                border: "1px solid var(--border)",
               }}
               placeholder="Provide the corrected answer..."
             />
@@ -349,10 +349,11 @@ export default function ItemDetailClient({
               <label
                 key={tag}
                 style={{
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--border)",
                   borderRadius: 999,
                   padding: "6px 12px",
                   cursor: "pointer",
+                  background: "var(--surface)",
                 }}
               >
                 <input
@@ -374,7 +375,7 @@ export default function ItemDetailClient({
               <label
                 key={opt}
                 style={{
-                  border: "1px solid #ddd",
+                  border: "1px solid var(--border)",
                   borderRadius: 999,
                   padding: "6px 12px",
                   cursor: "pointer",
@@ -405,7 +406,7 @@ export default function ItemDetailClient({
               marginTop: 6,
               padding: 10,
               borderRadius: 10,
-              border: "1px solid #ddd",
+              border: "1px solid var(--border)",
             }}
             placeholder="1–2 sentences max..."
           />
@@ -415,9 +416,9 @@ export default function ItemDetailClient({
           <button
             type="submit"
             style={{
-              border: "1px solid #111",
-              background: "#111",
-              color: "#fff",
+              border: "1px solid var(--accent)",
+              background: "var(--accent)",
+              color: "var(--accent-foreground)",
               padding: "8px 16px",
               borderRadius: 10,
               cursor: "pointer",
@@ -430,8 +431,8 @@ export default function ItemDetailClient({
             type="button"
             onClick={handleClear}
             style={{
-              border: "1px solid #ddd",
-              background: "#fff",
+              border: "1px solid var(--border)",
+              background: "var(--background)",
               padding: "8px 16px",
               borderRadius: 10,
               cursor: "pointer",
