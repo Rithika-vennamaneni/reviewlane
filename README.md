@@ -27,23 +27,19 @@ Motivation: scalable supervision approaches emphasize small amounts of high-qual
 
 ### 1. Human review as structured signal
 Reviewers assess model outputs using constrained decisions, issue tags, and confidence — treating disagreement as signal, not noise.
-
-![Human review screen](docs/images/review.png)
+<img width="1676" height="905" alt="Screenshot 2026-02-07 at 11 28 52 PM" src="https://github.com/user-attachments/assets/92e77660-41b5-4567-af7d-ae6cd542b0ff" />
 
 ---
 
 ### 2. Oversight metrics from human judgment
 ReviewLane aggregates reviews into system-level signals like disagreement rate, issue drivers, and confidence calibration.
-
-![Metrics dashboard](docs/images/metrics.png)
+<img width="1649" height="537" alt="Screenshot 2026-02-07 at 11 28 15 PM" src="https://github.com/user-attachments/assets/0852575d-ef9e-4b42-bc3b-473e01e85bd8" />
 
 ---
 
 ### 3. Drift detection across batches
 By comparing review distributions across batches, ReviewLane surfaces emerging or declining risk patterns over time.
-
-![Drift comparison](docs/images/compare.png)
-
+<img width="1668" height="461" alt="Screenshot 2026-02-07 at 11 28 30 PM" src="https://github.com/user-attachments/assets/ae9d3d1f-f64b-4c32-aaea-e10de2099b3e" />
 
 ## 2-minute demo
 1. Install dependencies:
