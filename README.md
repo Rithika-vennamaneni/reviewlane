@@ -47,5 +47,3 @@ Motivation: scalable supervision approaches emphasize small amounts of high-qual
 ## Acknowledgements & Tooling
 
 This project was developed by the author, with AI assistance used as a collaborative tool. Large language models (including Anthropic’s Claude and OpenAI’s ChatGPT) were used for brainstorming, refining written explanations, and assisting with code scaffolding and debugging.
-
-All system design decisions, evaluation criteria, data construction, and final implementations were made by the author. 
