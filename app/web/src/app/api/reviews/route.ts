@@ -57,6 +57,9 @@ export async function POST(request: Request) {
     );
   }
 
+  const bodyObj =
+    body && typeof body === "object" ? (body as Record<string, unknown>) : {};
+
   const {
     item_id,
     batch_id,
@@ -66,7 +69,7 @@ export async function POST(request: Request) {
     reason_tags,
     edited_text,
     notes,
-  } = body ?? {};
+  } = bodyObj;
 
   const reviewerId =
     typeof reviewer_id === "string" ? reviewer_id.trim() : "";
