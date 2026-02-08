@@ -10,22 +10,37 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === "string");
 }
 
+function requireString(value: unknown, name: string): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  return trimmed;
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const batch_id = searchParams.get("batch_id");
-  const item_id = searchParams.get("item_id");
+  const batchId = requireString(searchParams.get("batch_id"), "batch_id");
+  const itemIdParam = searchParams.get("item_id");
+  const itemId = itemIdParam === null ? null : requireString(itemIdParam, "item_id");
 
-  if (!batch_id) {
+  if (!batchId) {
     return NextResponse.json(
       { error: "batch_id query param is required." },
       { status: 400 }
     );
   }
 
+  if (itemIdParam !== null && !itemId) {
+    return NextResponse.json(
+      { error: "item_id query param must be a non-empty string." },
+      { status: 400 }
+    );
+  }
+
   const reviews = await prisma.review.findMany({
     where: {
-      batch_id,
-      ...(item_id ? { item_id } : {}),
+      batch_id: batchId,
+      ...(itemId ? { item_id: itemId } : {}),
     },
     orderBy: { created_at: "desc" },
   });
@@ -74,24 +89,28 @@ export async function POST(request: Request) {
   const editedText = typeof edited_text === "string" ? edited_text : "";
   const notesText = typeof notes === "string" ? notes : "";
 
+  const itemId = requireString(item_id, "item_id");
+  const batchId = requireString(batch_id, "batch_id");
   const reviewerId =
     typeof reviewer_id === "string" ? reviewer_id.trim() : "";
 
-  if (!item_id || !batch_id || !reviewerId) {
+  if (!itemId || !batchId || !reviewerId) {
     return NextResponse.json(
       { error: "item_id, batch_id, and reviewer_id are required." },
       { status: 400 }
     );
   }
 
-  if (!VALID_DECISIONS.includes(decision as Decision)) {
+  const decisionValue = typeof decision === "string" ? decision : "";
+  if (!VALID_DECISIONS.includes(decisionValue as Decision)) {
     return NextResponse.json(
       { error: "decision must be APPROVE, EDIT_APPROVE, or REJECT." },
       { status: 400 }
     );
   }
 
-  if (!VALID_CONFIDENCE.includes(confidence as Confidence)) {
+  const confidenceValue = typeof confidence === "string" ? confidence : "";
+  if (!VALID_CONFIDENCE.includes(confidenceValue as Confidence)) {
     return NextResponse.json(
       { error: "confidence must be low, medium, or high." },
       { status: 400 }
@@ -105,7 +124,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (decision === "EDIT_APPROVE" && editedText.trim().length === 0) {
+  if (decisionValue === "EDIT_APPROVE" && editedText.trim().length === 0) {
     return NextResponse.json(
       { error: "edited_text is required for EDIT_APPROVE." },
       { status: 400 }
@@ -113,7 +132,7 @@ export async function POST(request: Request) {
   }
 
   const item = await prisma.item.findUnique({
-    where: { id_batch_id: { id: item_id, batch_id } },
+    where: { id_batch_id: { id: itemId, batch_id: batchId } },
   });
 
   if (!item) {
@@ -123,24 +142,24 @@ export async function POST(request: Request) {
   const review = await prisma.review.upsert({
     where: {
       item_id_batch_id_reviewer_id: {
-        item_id,
-        batch_id,
+        item_id: itemId,
+        batch_id: batchId,
         reviewer_id: reviewerId,
       },
     },
     create: {
-      item_id,
-      batch_id,
+      item_id: itemId,
+      batch_id: batchId,
       reviewer_id: reviewerId,
-      decision,
-      confidence,
+      decision: decisionValue as Decision,
+      confidence: confidenceValue as Confidence,
       reason_tags,
       edited_text: editedText.trim() || null,
       notes: notesText.trim() || null,
     },
     update: {
-      decision,
-      confidence,
+      decision: decisionValue as Decision,
+      confidence: confidenceValue as Confidence,
       reason_tags,
       edited_text: editedText.trim() || null,
       notes: notesText.trim() || null,
