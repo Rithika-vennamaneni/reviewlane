@@ -23,6 +23,28 @@ Motivation: scalable supervision approaches emphasize small amounts of high-qual
 - /docs: architecture, review schema, evaluation framework
 - /scripts: python analysis helpers + sample data
 
+## How ReviewLane works (MVP demo)
+
+### 1. Human review as structured signal
+Reviewers assess model outputs using constrained decisions, issue tags, and confidence — treating disagreement as signal, not noise.
+
+![Human review screen](docs/images/review.png)
+
+---
+
+### 2. Oversight metrics from human judgment
+ReviewLane aggregates reviews into system-level signals like disagreement rate, issue drivers, and confidence calibration.
+
+![Metrics dashboard](docs/images/metrics.png)
+
+---
+
+### 3. Drift detection across batches
+By comparing review distributions across batches, ReviewLane surfaces emerging or declining risk patterns over time.
+
+![Drift comparison](docs/images/compare.png)
+
+
 ## 2-minute demo
 1. Install dependencies:
    `cd app/web`
