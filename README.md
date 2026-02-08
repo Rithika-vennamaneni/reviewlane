@@ -1,14 +1,17 @@
 # ReviewLane
 
-Human review + evaluation layer for LLM safety — track reviewer disagreement, quality signals, and drift over time.
+Human review + evaluation layer for LLM safety, track reviewer disagreement, quality signals, and drift over time.
 
-**Status:** In progress (MVP target: <DATE>)  
-**What works today:** Basic pipeline + schema + initial UI skeleton.  
-**Next milestone:** End-to-end demo: submit sample outputs → review → dashboard signals.
+ **Live demo:** https://reviewlane-production.up.railway.app/
 
-## Why this exists
-Most safety pipelines log model outputs, but lose the *human judgment layer* — who reviewed, what they disagreed on, and what patterns are changing over time.
-ReviewLane makes human review measurable and queryable.
+## What this is
+Most LLM safety pipelines log model outputs but lose the human judgment layer:
+- Who reviewed an output?
+- Why did reviewers disagree?
+- Are disagreements increasing over time?
+- Are high-confidence reviewers still diverging?
+
+ReviewLane captures structured human reviews and aggregates them into system level oversight signals such as disagreement rates, confidence calibration, and drift across batches.
 
 Motivation: scalable supervision approaches emphasize small amounts of high-quality human oversight as AI systems grow more capable. ReviewLane extends this by treating human judgment itself as a measurable part of the safety system, helping teams identify policy gray areas and improve governance without replacing humans.
 
