@@ -71,6 +71,9 @@ export async function POST(request: Request) {
     notes,
   } = bodyObj;
 
+  const editedText = typeof edited_text === "string" ? edited_text : "";
+  const notesText = typeof notes === "string" ? notes : "";
+
   const reviewerId =
     typeof reviewer_id === "string" ? reviewer_id.trim() : "";
 
@@ -102,7 +105,7 @@ export async function POST(request: Request) {
     );
   }
 
-  if (decision === "EDIT_APPROVE" && (!edited_text || !edited_text.trim())) {
+  if (decision === "EDIT_APPROVE" && editedText.trim().length === 0) {
     return NextResponse.json(
       { error: "edited_text is required for EDIT_APPROVE." },
       { status: 400 }
@@ -132,15 +135,15 @@ export async function POST(request: Request) {
       decision,
       confidence,
       reason_tags,
-      edited_text: edited_text?.trim() || null,
-      notes: notes?.trim() || null,
+      edited_text: editedText.trim() || null,
+      notes: notesText.trim() || null,
     },
     update: {
       decision,
       confidence,
       reason_tags,
-      edited_text: edited_text?.trim() || null,
-      notes: notes?.trim() || null,
+      edited_text: editedText.trim() || null,
+      notes: notesText.trim() || null,
     },
   });
 
