@@ -122,7 +122,8 @@ export default function Home() {
                     borderRadius: 999,
                     padding: "2px 10px",
                     textDecoration: "none",
-                    color: "#111",
+                    color: "#fff",
+                    background: "#111",
                   }}
                 >
                   Review

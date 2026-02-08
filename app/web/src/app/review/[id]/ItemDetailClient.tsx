@@ -178,7 +178,15 @@ export default function ItemDetailClient({
   }
 
   return (
-    <main style={{ padding: 24, fontFamily: "system-ui" }}>
+    <main
+      style={{
+        padding: 24,
+        fontFamily: "system-ui",
+        background: "#fff",
+        color: "#111",
+        minHeight: "100vh",
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -242,10 +250,11 @@ export default function ItemDetailClient({
         <div
           style={{
             marginTop: 6,
-            background: "#fafafa",
+            background: "#f5f5f5",
             border: "1px solid #eee",
             padding: 12,
             borderRadius: 10,
+            color: "#111",
           }}
         >
           {item?.context}
@@ -257,10 +266,11 @@ export default function ItemDetailClient({
         <div
           style={{
             marginTop: 6,
-            background: "#f7f7ff",
-            border: "1px solid #e6e6ff",
+            background: "#f0f2ff",
+            border: "1px solid #d6daf5",
             padding: 12,
             borderRadius: 10,
+            color: "#111",
           }}
         >
           {item?.model_answer}
