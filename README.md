@@ -13,7 +13,7 @@ Most LLM safety pipelines log model outputs but lose the human judgment layer:
 
 ReviewLane captures structured human reviews and aggregates them into system level oversight signals such as disagreement rates, confidence calibration, and drift across batches.
 
-Motivation: scalable supervision approaches emphasize small amounts of high-quality human oversight as AI systems grow more capable. ReviewLane extends this by treating human judgment itself as a measurable part of the safety system, helping teams identify policy gray areas and improve governance without replacing humans.
+*Motivation:* scalable supervision approaches emphasize small amounts of high-quality human oversight as AI systems grow more capable. ReviewLane extends this by treating human judgment itself as a measurable part of the safety system, helping teams identify policy gray areas and improve governance without replacing humans.
 
 ## MVP demo (goal)
 1. Ingest a batch of model outputs (JSON)
