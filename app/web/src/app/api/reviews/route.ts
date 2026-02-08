@@ -81,14 +81,14 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!VALID_DECISIONS.includes(decision)) {
+  if (!VALID_DECISIONS.includes(decision as Decision)) {
     return NextResponse.json(
       { error: "decision must be APPROVE, EDIT_APPROVE, or REJECT." },
       { status: 400 }
     );
   }
 
-  if (!VALID_CONFIDENCE.includes(confidence)) {
+  if (!VALID_CONFIDENCE.includes(confidence as Confidence)) {
     return NextResponse.json(
       { error: "confidence must be low, medium, or high." },
       { status: 400 }
