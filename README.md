@@ -26,7 +26,7 @@ Motivation: scalable supervision approaches emphasize small amounts of high-qual
 ## How ReviewLane works (MVP demo)
 
 ### 1. Human review as structured signal
-Reviewers assess model outputs using constrained decisions, issue tags, and confidence — treating disagreement as signal, not noise.
+Reviewers assess model outputs using constrained decisions, issue tags, and confidence, treating disagreement as signal, not noise.
 <img width="1676" height="905" alt="Screenshot 2026-02-07 at 11 28 52 PM" src="https://github.com/user-attachments/assets/92e77660-41b5-4567-af7d-ae6cd542b0ff" />
 
 ---
